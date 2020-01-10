@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-app-random-metric-go
+  labels:
+    app: prometheus-app-random-metric-go
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prometheus-app-random-metric-go
+  template:
+    metadata:
+      labels:
+        app: prometheus-app-random-metric-go
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '3000'
+        prometheus.io/path: '/metrics'
+    spec:
+      containers:
+      - name: prometheus-app-random-metric-go
+
+        image: bogdangi/prometheus-app-random-metric-go:latest
+
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
