@@ -1,21 +1,14 @@
-function deploy_prometheus {
-        kubectl apply -f k8s/prometheus/prometheus-deployment.yaml
+function deploy_app {
+        local app_name=$1
+        local timeout=$2
+        local namespace=${3:-default}
+
+        kubectl apply -f k8s/$app_name
         kubectl wait \
                 --for=condition=available \
-                --timeout=90s \
-                --namespace=monitoring \
-                deployment/prometheus
-
-        kubectl expose deployment prometheus --type=LoadBalancer --port=9090 -n monitoring \
-                || echo Already exist
-}
-
-function deploy_prometheus_app_random_metric_go {
-        kubectl apply -f k8s/prometheus-app-random-metric-go/deployment.yaml
-        kubectl wait \
-                --for=condition=available \
-                --timeout=30s \
-                deployment/prometheus-app-random-metric-go
+                --timeout=$timeout \
+                --namespace=$namespace \
+                deployment/$app_name
 }
 
 function get_prometheus_url {
