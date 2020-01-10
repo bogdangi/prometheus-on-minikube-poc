@@ -10,6 +10,9 @@ jobs:
     - name: Setup Minikube
       id: minikube
       uses: CodingNagger/minikube-setup-action@v1.0.2
+      with:
+        k8s-version: 1.17.0
+        minikube-version: 1.6.2
 
     - name: Launch Minikube
       run: eval ${{ steps.minikube.outputs.launcher }}
